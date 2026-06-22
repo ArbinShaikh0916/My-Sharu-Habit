@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>My Sharu Habit — The Big Reading App</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#E8E4FF 0%,#FFE4F0 50%,#E4F8FF 100%);min-height:100vh;padding:16px;}
+:root{
+  --pink:#D4537E;--pink-l:#FBEAF0;--pink-d:#72243E;
+  --purple:#7F77DD;--purple-l:#EEEDFE;--purple-d:#3C3489;
+  --blue:#378ADD;--blue-l:#E6F1FB;--blue-d:#185FA5;
+  --amber:#EF9F27;--amber-l:#FAEEDA;--amber-d:#854F0B;
+  --green:#1D9E75;--green-l:#E1F5EE;--green-d:#085041;
+  --coral:#D85A30;--coral-l:#FAECE7;--coral-d:#712B13;
+  --text:#26215C;
+}
+.app{max-width:1200px;margin:0 auto;background:#FAFAFE;border-radius:28px;overflow:hidden;box-shadow:0 12px 60px rgba(127,119,221,0.18);}
+
+/* TOP BAR */
+.topbar{background:var(--purple);padding:0 24px;height:68px;display:flex;align-items:center;justify-content:space-between;}
+.tlogo{display:flex;align-items:center;gap:12px;}
+.tlogobox{width:42px;height:42px;background:#fff;border-radius:13px;display:flex;align-items:center;justify-content:center;}
+.tlogobox i{font-size:24px;color:var(--purple);}
+.tlogoname{font-family:'Fredoka One',cursive;font-size:26px;color:#fff;letter-spacing:1px;}
+.tlogotag{font-size:11px;color:#CECBF6;font-weight:700;}
+.topright{display:flex;align-items:center;gap:10px;}
+.xpb{background:rgba(255,255,255,0.18);border-radius:22px;padding:6px 14px;font-size:13px;font-weight:700;color:#fff;display:flex;align-items:center;gap:5px;cursor:default;}
+.xpb i{font-size:15px;}
+.topavatar{width:38px;height:38px;background:var(--pink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:16px;color:#fff;cursor:pointer;border:2px solid rgba(255,255,255,0.4);}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 100px);}
+
+/* SIDEBAR */
+.sidebar{background:#fff;border-right:2px solid #EEEDFE;padding:18px 10px;display:flex;flex-direction:column;}
+.nsec{font-size:10px;font-weight:800;color:#B4B2A9;letter-spacing:1.5px;text-transform:uppercase;padding:10px 12px 4px;}
+.nitem{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;cursor:pointer;font-weight:700;font-size:13px;color:#888780;margin-bottom:4px;border:2px solid transparent;transition:all 0.14s;}
+.nitem:hover{background:var(--purple-l);color:var(--purple-d);}
+.nitem.on{background:var(--purple);color:#fff;border-color:var(--purple-d);}
+.nitem i{font-size:18px;flex-shrink:0;}
+.nbadge{margin-left:auto;background:var(--pink);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:800;}
+.owlbox{margin-top:auto;padding-top:16px;background:var(--purple-l);border-radius:16px;padding:14px;text-align:center;margin-top:16px;}
+.owlmsg{font-size:11px;font-weight:700;color:var(--purple-d);margin-top:6px;line-height:1.4;}
+
+/* CONTENT */
+.content{padding:22px 26px;overflow:hidden;}
+.pg{display:none;}.pg.on{display:block;}
+.pghead{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.pgtitle{font-family:'Fredoka One',cursive;font-size:26px;color:var(--text);}
+.pgsub{font-size:12px;font-weight:700;color:#888780;margin-top:2px;}
+
+/* CARDS */
+.card{background:#fff;border:2px solid #EEEDFE;border-radius:18px;padding:14px 16px;margin-bottom:12px;}
+.ctitle{font-family:'Fredoka One',cursive;font-size:15px;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.threecol{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px;}
+
+/* STATS */
+.stats5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:18px;}
+.sbox{border-radius:16px;padding:14px 8px;text-align:center;border:2px solid transparent;}
+.s1{background:var(--pink-l);border-color:#F4C0D1;} .s2{background:var(--blue-l);border-color:#B5D4F4;}
+.s3{background:var(--amber-l);border-color:#FAC775;} .s4{background:var(--green-l);border-color:#9FE1CB;}
+.s5{background:var(--purple-l);border-color:#CECBF6;}
+.snum{font-family:'Fredoka One',cursive;font-size:28px;}
+.n1{color:var(--pink-d);}.n2{color:var(--blue-d);}.n3{color:var(--amber-d);}.n4{color:var(--green-d);}.n5{color:var(--purple-d);}
+.slbl{font-size:10px;font-weight:800;margin-top:2px;}
+.l1{color:var(--pink);}.l2{color:var(--blue);}.l3{color:var(--amber);}.l4{color:var(--green);}.l5{color:var(--purple);}
+
+/* BUTTONS */
+.btn{border:none;border-radius:14px;padding:11px 18px;font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:transform 0.1s;letter-spacing:0.3px;}
+.btn:hover{transform:scale(1.03);}
+.btn:active{transform:scale(0.97);}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.btn.full{width:100%;}
+.btn.sm{padding:7px 13px;font-size:13px;border-radius:12px;}
+.btn.xs{padding:5px 10px;font-size:11px;border-radius:10px;}
+.bpk{background:var(--pink);color:#fff;} .bp{background:var(--purple);color:#fff;}
+.ba{background:var(--amber);color:#fff;} .bg{background:var(--green);color:#fff;}
+.bbl{background:var(--blue);color:#fff;} .bco{background:var(--coral);color:#fff;}
+.bout{background:#fff;color:var(--purple);border:2px solid var(--purple);}
+
+/* FORM */
+.formsec{background:#fff;border:2px solid #B5D4F4;border-radius:18px;padding:20px;}
+.fl{font-size:12px;font-weight:800;color:var(--blue-d);margin-bottom:5px;display:block;}
+.fi{width:100%;border-radius:12px;border:2px solid #B5D4F4;padding:9px 13px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);background:var(--blue-l);margin-bottom:12px;}
+.fi:focus{outline:none;border-color:var(--blue);}
+.frow2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+
+/* CHALLENGE BANNER */
+.chal{background:var(--purple);border-radius:18px;padding:16px 18px;display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.chico{width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.chtitle{font-family:'Fredoka One',cursive;font-size:17px;color:#fff;}
+.chsub{font-size:12px;color:#CECBF6;font-weight:700;}
+.xpbg{background:rgba(255,255,255,0.2);border-radius:6px;height:8px;margin-top:6px;width:100%;max-width:220px;}
+.xpfill{background:#FAC775;border-radius:6px;height:8px;transition:width 0.5s;}
+.chbtn{background:#fff;border:none;border-radius:12px;padding:9px 16px;font-family:'Fredoka One',cursive;font-size:14px;color:var(--purple);cursor:pointer;flex-shrink:0;margin-left:auto;}
+.chbtn:hover{transform:scale(1.04);}
+
+/* SHELF */
+.filtrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.fpill{padding:6px 16px;border-radius:20px;border:2px solid #EEEDFE;font-size:12px;font-weight:700;cursor:pointer;background:#fff;color:#888780;transition:all 0.12s;}
+.fpill.on{background:var(--purple);border-color:var(--purple-d);color:#fff;}
+.bcard{background:#fff;border:2px solid #EEEDFE;border-radius:18px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:flex-start;gap:14px;transition:all 0.14s;}
+.bcard:hover{border-color:var(--purple);transform:translateY(-1px);}
+.bspine{width:58px;height:74px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.bct{font-size:15px;font-weight:800;color:var(--text);}
+.bca{font-size:12px;color:#888780;margin-top:2px;}
+.bcs{color:var(--amber);font-size:13px;margin-top:3px;}
+.bcb{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block;margin-top:4px;}
+.bcn{font-size:12px;color:#5F5E5A;font-style:italic;margin-top:4px;line-height:1.4;}
+.bbr{background:var(--pink-l);color:var(--pink-d);}
+.bbd{background:var(--green-l);color:var(--green-d);}
+.bbw{background:var(--amber-l);color:var(--amber-d);}
+.delbtn{background:var(--pink-l);border:none;border-radius:10px;padding:6px 9px;cursor:pointer;color:var(--pink-d);font-size:14px;margin-left:auto;flex-shrink:0;}
+
+/* RECS */
+.recard{background:#fff;border:2px solid #9FE1CB;border-radius:18px;padding:16px 18px;margin-bottom:12px;}
+.retop{display:flex;align-items:flex-start;gap:14px;}
+.reico{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+.rebadge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--green-l);color:var(--green-d);display:inline-block;margin-bottom:5px;}
+.ret{font-size:16px;font-weight:800;color:var(--text);}
+.rea{font-size:12px;color:#888780;}
+.rew{font-size:13px;color:#444441;margin-top:6px;line-height:1.5;}
+.rebtns{display:flex;gap:8px;margin-top:10px;}
+.rebtn{border:2px solid #9FE1CB;background:var(--green-l);border-radius:10px;padding:6px 14px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--green-d);cursor:pointer;}
+
+/* QUIZ */
+.qwrap{max-width:580px;margin:0 auto;}
+.qhd{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.qpbg{flex:1;height:12px;background:var(--purple-l);border-radius:6px;}
+.qpfill{height:12px;background:var(--purple);border-radius:6px;transition:width 0.3s;}
+.qnum{font-size:13px;font-weight:700;color:var(--purple-d);}
+.qcard{background:#fff;border:2px solid #CECBF6;border-radius:22px;padding:24px;}
+.qtext{font-family:'Fredoka One',cursive;font-size:20px;color:var(--text);text-align:center;margin-bottom:18px;line-height:1.4;}
+.qopt{display:block;width:100%;text-align:left;padding:12px 18px;margin-bottom:9px;border:2px solid #CECBF6;border-radius:14px;background:var(--purple-l);color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.12s;}
+.qopt:hover{background:#AFA9EC;border-color:var(--purple);color:#fff;}
+.qopt.ok{background:#9FE1CB;border-color:var(--green);color:var(--green-d);}
+.qopt.no{background:#F7C1C1;border-color:#E24B4A;color:#501313;}
+.qfb{text-align:center;font-size:14px;font-weight:700;min-height:22px;margin-top:8px;}
+
+/* RESULT */
+.rbox{background:#fff;border:2px solid #CECBF6;border-radius:22px;padding:28px;text-align:center;}
+.rscore{font-family:'Fredoka One',cursive;font-size:72px;color:var(--purple);}
+.rpct{font-size:16px;font-weight:700;color:var(--purple-d);margin-top:4px;}
+
+/* TIMER */
+.timer-display{font-family:'Fredoka One',cursive;font-size:72px;color:var(--purple);text-align:center;padding:20px 0;}
+.timer-circle{width:200px;height:200px;border-radius:50%;border:8px solid var(--purple-l);display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto 20px;}
+.timer-num{font-family:'Fredoka One',cursive;font-size:52px;color:var(--purple);}
+.timer-lbl{font-size:12px;font-weight:700;color:var(--purple-d);}
+.timer-btns{display:flex;gap:10px;justify-content:center;margin-top:16px;}
+.session-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1.5px dashed #EEEDFE;}
+.session-item:last-child{border:none;}
+
+/* BADGES */
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.badge-card{background:#fff;border:2px solid #EEEDFE;border-radius:16px;padding:14px;text-align:center;transition:all 0.14s;}
+.badge-card.earned{border-color:var(--amber);background:var(--amber-l);}
+.badge-card.locked{opacity:0.5;}
+.badge-ico{font-size:36px;margin-bottom:8px;display:block;}
+.badge-name{font-family:'Fredoka One',cursive;font-size:13px;color:var(--text);}
+.badge-desc{font-size:10px;color:#888780;margin-top:3px;line-height:1.4;}
+.badge-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;margin-top:6px;}
+.bs-earned{background:var(--amber-l);color:var(--amber-d);}
+.bs-locked{background:#F1EFE8;color:#888780;}
+
+/* LEADERBOARD */
+.lb-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;margin-bottom:8px;background:#fff;border:2px solid #EEEDFE;transition:all 0.12s;}
+.lb-item:hover{border-color:var(--purple);}
+.lb-rank{font-family:'Fredoka One',cursive;font-size:22px;width:36px;text-align:center;flex-shrink:0;}
+.lb-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:16px;color:#fff;flex-shrink:0;}
+.lb-name{font-size:14px;font-weight:700;color:var(--text);}
+.lb-stats{font-size:11px;color:#888780;}
+.lb-xp{font-family:'Fredoka One',cursive;font-size:18px;color:var(--amber-d);margin-left:auto;}
+.lb-you{border-color:var(--purple);background:var(--purple-l);}
+
+/* GOALS */
+.goalcard{background:#fff;border:2px solid #EEEDFE;border-radius:18px;padding:16px 18px;margin-bottom:12px;display:flex;align-items:center;gap:14px;}
+.gico{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.gico i{font-size:22px;}
+.gtitle{font-family:'Fredoka One',cursive;font-size:15px;color:var(--text);}
+.gsub{font-size:12px;color:#888780;margin-top:1px;}
+.gpbg{background:#F1EFE8;border-radius:8px;height:12px;margin-top:6px;width:100%;}
+.gpfill{border-radius:8px;height:12px;transition:width 0.5s;}
+.gdone{font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;flex-shrink:0;}
+
+/* MINI BOOK ROW */
+.brow{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1.5px dashed #EEEDFE;}
+.brow:last-child{border:none;}
+.mspine{width:32px;height:42px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.mspine i{font-size:14px;color:#fff;}
+.bmt{font-size:13px;font-weight:700;color:var(--text);}
+.bmm{font-size:11px;color:#888780;}
+.bmb{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;margin-top:2px;}
+
+/* GENRE GRID */
+.gengrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+.gpill{border-radius:11px;padding:8px 5px;text-align:center;font-size:10px;font-weight:800;cursor:pointer;transition:transform 0.12s;border:2px solid transparent;}
+.gpill:hover{transform:scale(1.06);}
+
+/* ACTIVITY */
+.arow{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #F1EFE8;}
+.arow:last-child{border:none;}
+.adot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.atxt{font-size:12px;color:#444441;}
+.atime{font-size:10px;color:#B4B2A9;margin-left:auto;}
+
+/* LOADERS */
+.ldbox{display:flex;flex-direction:column;align-items:center;padding:48px;gap:12px;}
+.lddots{display:flex;gap:9px;}
+.ld{width:13px;height:13px;border-radius:50%;animation:ldp 1.2s infinite;}
+.lda{background:var(--pink);}.ldb{background:var(--blue);animation-delay:0.2s;}.ldc{background:var(--amber);animation-delay:0.4s;}
+@keyframes ldp{0%,80%,100%{transform:scale(0.7);}40%{transform:scale(1.3);}}
+.ldtxt{font-family:'Fredoka One',cursive;font-size:17px;color:var(--purple);}
+.empty{text-align:center;padding:40px 20px;}
+.empty i{font-size:52px;color:#CECBF6;display:block;margin-bottom:10px;}
+.empty p{font-family:'Fredoka One',cursive;font-size:16px;color:#B4B2A9;}
+
+/* SEARCH BAR */
+.searchbar{display:flex;gap:10px;margin-bottom:16px;}
+.searchinput{flex:1;border-radius:14px;border:2px solid #B5D4F4;padding:10px 14px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);background:var(--blue-l);}
+.searchinput:focus{outline:none;border-color:var(--blue);}
+.searchresult{background:#fff;border:2px solid #B5D4F4;border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:all 0.12s;}
+.searchresult:hover{border-color:var(--blue);transform:translateY(-1px);}
+.srt{font-size:14px;font-weight:700;color:var(--text);}
+.sra{font-size:12px;color:#888780;}
+
+/* READING TIMER */
+.timer-sessions{max-height:220px;overflow-y:auto;}
+
+/* PARENT DASH */
+.child-card{background:#fff;border:2px solid #EEEDFE;border-radius:18px;padding:16px;margin-bottom:12px;}
+.child-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.child-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:20px;color:#fff;}
+.child-name{font-size:16px;font-weight:800;color:var(--text);}
+.child-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;}
+.cs{background:var(--purple-l);border-radius:10px;padding:8px;text-align:center;}
+.csn{font-family:'Fredoka One',cursive;font-size:20px;color:var(--purple-d);}
+.csl{font-size:10px;font-weight:700;color:var(--purple);}
+
+/* CONFETTI */
+.confetti-row{display:flex;justify-content:center;gap:6px;margin-bottom:12px;}
+.cf{width:14px;height:14px;border-radius:3px;}
+
+/* XP BAR LEVEL */
+.level-bar-wrap{background:var(--purple-l);border-radius:16px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;}
+.level-circle{width:52px;height:52px;background:var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:22px;color:#fff;flex-shrink:0;}
+.level-info{flex:1;}
+.level-title{font-family:'Fredoka One',cursive;font-size:16px;color:var(--purple-d);}
+.level-sub{font-size:11px;color:var(--purple);font-weight:700;}
+.level-progress{background:rgba(127,119,221,0.2);border-radius:6px;height:10px;margin-top:6px;}
+.level-progress-fill{background:var(--purple);border-radius:6px;height:10px;transition:width 0.5s;}
+
+/* WELCOME */
+.welcome{background:var(--purple);border-radius:20px;padding:20px 24px;margin-bottom:18px;display:flex;align-items:center;gap:20px;position:relative;overflow:hidden;}
+.wt{font-family:'Fredoka One',cursive;font-size:22px;color:#fff;margin-bottom:4px;}
+.ws{font-size:13px;color:#CECBF6;font-weight:700;line-height:1.5;}
+.wbtn{background:#fff;border:none;border-radius:12px;padding:9px 18px;font-family:'Fredoka One',cursive;font-size:14px;color:var(--purple);cursor:pointer;margin-top:12px;display:inline-block;}
+.wbtn:hover{transform:scale(1.04);}
+.wdeco{position:absolute;right:16px;top:0;bottom:0;display:flex;align-items:center;opacity:0.15;}
+.wdeco i{font-size:100px;color:#fff;}
+
+/* MODAL OVERLAY */
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:22px;padding:28px;max-width:420px;width:90%;text-align:center;position:relative;}
+.modal-title{font-family:'Fredoka One',cursive;font-size:24px;color:var(--text);margin-bottom:10px;}
+.modal-close{position:absolute;top:14px;right:14px;background:var(--pink-l);border:none;border-radius:10px;width:30px;height:30px;cursor:pointer;font-size:16px;color:var(--pink-d);display:flex;align-items:center;justify-content:center;}
+
+/* SCROLL */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:#F1EFE8;}
+::-webkit-scrollbar-thumb{background:#CECBF6;border-radius:3px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- BADGE MODAL -->
+<div class="modal-overlay" id="badge-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    <div style="font-size:64px;margin-bottom:10px;" id="modal-icon">⭐</div>
+    <div class="modal-title" id="modal-title">Badge Earned!</div>
+    <p style="font-size:14px;color:#888780;margin-bottom:20px;" id="modal-desc">You earned a new badge!</p>
+    <button class="btn bp full" onclick="closeModal()">Awesome! Keep reading!</button>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="tlogo">
+    <div class="tlogobox"><i class="ti ti-books"></i></div>
+    <div><div class="tlogoname">My Sharu Habit</div><div class="tlogotag">The Big Reading Adventure</div></div>
+  </div>
+  <div class="topright">
+    <div class="xpb"><i class="ti ti-star"></i><span id="xpc">0</span> XP</div>
+    <div class="xpb"><i class="ti ti-flame"></i><span id="stk">0</span> streak</div>
+    <div class="xpb"><i class="ti ti-trophy"></i>Lv.<span id="lvl">1</span></div>
+    <div class="xpb"><i class="ti ti-clock"></i><span id="tot-time">0</span>m read</div>
+    <div class="topavatar" id="player-avatar">S</div>
+  </div>
+</div>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="nsec">Main</div>
+  <div class="nitem on" id="ni-home" onclick="goPage('home')"><i class="ti ti-home"></i> Home</div>
+  <div class="nitem" id="ni-shelf" onclick="goPage('shelf')"><i class="ti ti-bookmarks"></i> My Shelf</div>
+  <div class="nitem" id="ni-log" onclick="goPage('log')"><i class="ti ti-circle-plus"></i> Log Book</div>
+  <div class="nitem" id="ni-search" onclick="goPage('search')"><i class="ti ti-search"></i> Search Books</div>
+  <div class="nsec">Play & Discover</div>
+  <div class="nitem" id="ni-recs" onclick="goPage('recs')"><i class="ti ti-sparkles"></i> For You</div>
+  <div class="nitem" id="ni-quiz" onclick="goPage('quiz')"><i class="ti ti-wand"></i> Personality Quiz <span class="nbadge">NEW</span></div>
+  <div class="nitem" id="ni-timer" onclick="goPage('timer')"><i class="ti ti-clock"></i> Reading Timer</div>
+  <div class="nsec">Progress</div>
+  <div class="nitem" id="ni-goals" onclick="goPage('goals')"><i class="ti ti-target"></i> My Goals</div>
+  <div class="nitem" id="ni-badges" onclick="goPage('badges')"><i class="ti ti-medal"></i> Badges</div>
+  <div class="nitem" id="ni-leaderboard" onclick="goPage('leaderboard')"><i class="ti ti-podium"></i> Leaderboard</div>
+  <div class="nsec">Family</div>
+  <div class="nitem" id="ni-parent" onclick="goPage('parent')"><i class="ti ti-users"></i> Parent Dash</div>
+
+  <div class="owlbox">
+    <svg width="68" height="72" viewBox="0 0 68 72">
+      <ellipse cx="34" cy="66" rx="21" ry="6" fill="#CECBF6" opacity="0.4"/>
+      <rect x="13" y="27" width="42" height="36" rx="10" fill="#FAC775"/>
+      <rect x="16" y="30" width="36" height="30" rx="9" fill="#FAEEDA"/>
+      <ellipse cx="34" cy="21" rx="20" ry="20" fill="#FAC775"/>
+      <ellipse cx="34" cy="21" rx="15" ry="15" fill="#FAEEDA"/>
+      <ellipse cx="25" cy="16" rx="6" ry="7" fill="#fff"/>
+      <ellipse cx="43" cy="16" rx="6" ry="7" fill="#fff"/>
+      <ellipse cx="25" cy="17" rx="4" ry="4" fill="#26215C"/>
+      <ellipse cx="43" cy="17" rx="4" ry="4" fill="#26215C"/>
+      <ellipse cx="26" cy="16" rx="1.5" ry="1.5" fill="#fff"/>
+      <ellipse cx="44" cy="16" rx="1.5" ry="1.5" fill="#fff"/>
+      <path d="M29 26 Q34 30 39 26" fill="none" stroke="#BA7517" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="16" cy="13" rx="6" ry="9" fill="#FAC775" transform="rotate(-20 16 13)"/>
+      <ellipse cx="52" cy="13" rx="6" ry="9" fill="#FAC775" transform="rotate(20 52 13)"/>
+      <rect x="24" y="47" width="8" height="14" rx="4" fill="#534AB7"/>
+      <rect x="36" y="47" width="8" height="14" rx="4" fill="#534AB7"/>
+      <rect x="20" y="58" width="14" height="6" rx="3" fill="#3C3489"/>
+      <rect x="34" y="58" width="14" height="6" rx="3" fill="#3C3489"/>
+    </svg>
+    <div class="owlmsg" id="owltip">Keep reading — you're amazing!</div>
+  </div>
+</div>
+
+<!-- CONTENT AREA -->
+<div class="content">
+
+<!-- ====== HOME ====== -->
+<div class="pg on" id="pg-home">
+  <div class="welcome">
+    <div class="wdeco"><i class="ti ti-books"></i></div>
+    <svg width="120" height="90" viewBox="0 0 120 90" style="flex-shrink:0;">
+      <rect x="5" y="55" width="32" height="8" rx="3" fill="#D4537E"/>
+      <rect x="7" y="47" width="28" height="8" rx="3" fill="#378ADD"/>
+      <rect x="4" y="39" width="33" height="8" rx="3" fill="#EF9F27"/>
+      <rect x="8" y="31" width="26" height="8" rx="3" fill="#1D9E75"/>
+      <rect x="50" y="15" width="30" height="40" rx="5" fill="#7F77DD"/>
+      <rect x="52" y="17" width="26" height="36" rx="4" fill="#AFA9EC"/>
+      <rect x="55" y="23" width="14" height="2" rx="1" fill="#fff" opacity="0.7"/>
+      <rect x="55" y="28" width="18" height="2" rx="1" fill="#fff" opacity="0.7"/>
+      <rect x="55" y="33" width="10" height="2" rx="1" fill="#fff" opacity="0.7"/>
+      <ellipse cx="46" cy="32" rx="8" ry="5" fill="rgba(255,255,255,0.3)" transform="rotate(-20 46 32)"/>
+      <ellipse cx="84" cy="32" rx="8" ry="5" fill="rgba(255,255,255,0.3)" transform="rotate(20 84 32)"/>
+      <polygon points="100,8 103,17 112,17 105,22 108,31 100,26 92,31 95,22 88,17 97,17" fill="#FAC775"/>
+      <polygon points="100,11 102,18 110,18 104,22 106,29 100,25 94,29 96,22 90,18 98,18" fill="#EF9F27"/>
+    </svg>
+    <div>
+      <div class="wt">Welcome to My Sharu Habit!</div>
+      <div class="ws">Your epic reading adventure starts here.<br>Log books, earn badges, beat quizzes, and more!</div>
+      <button class="wbtn" onclick="goPage('log')">+ Log your first book!</button>
+    </div>
+  </div>
+
+  <div class="level-bar-wrap">
+    <div class="level-circle" id="lv-circle">1</div>
+    <div class="level-info">
+      <div class="level-title" id="lv-title">Bookworm Beginner</div>
+      <div class="level-sub" id="lv-sub">0 / 100 XP to next level</div>
+      <div class="level-progress"><div class="level-progress-fill" id="lv-bar" style="width:0%"></div></div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-family:'Fredoka One',cursive;font-size:13px;color:var(--purple-d);">Next level</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:18px;color:var(--purple);" id="lv-next">📖 Page Turner</div>
+    </div>
+  </div>
+
+  <div class="chal">
+    <div class="chico"><i class="ti ti-trophy"></i></div>
+    <div style="flex:1;">
+      <div class="chtitle">Daily reading challenge</div>
+      <div class="chsub">Read for 20 minutes to earn 50 XP!</div>
+      <div class="xpbg"><div class="xpfill" id="dbar" style="width:0%"></div></div>
+    </div>
+    <button class="chbtn" onclick="claimXP()">Claim 50 XP!</button>
+  </div>
+
+  <div class="stats5">
+    <div class="sbox s1"><div class="snum n1" id="h1">0</div><div class="slbl l1">Books logged</div></div>
+    <div class="sbox s2"><div class="snum n2" id="h2">0</div><div class="slbl l2">Finished</div></div>
+    <div class="sbox s3"><div class="snum n3" id="h3">0</div><div class="slbl l3">Pages read</div></div>
+    <div class="sbox s4"><div class="snum n4" id="h4">0</div><div class="slbl l4">Genres tried</div></div>
+    <div class="sbox s5"><div class="snum n5" id="h5">0</div><div class="slbl l5">Minutes read</div></div>
+  </div>
+
+  <div class="twocol">
+    <div class="card">
+      <div class="ctitle" style="color:var(--pink-d);"><i class="ti ti-clock"></i> Recently logged</div>
+      <div id="recbks"><div style="font-size:12px;color:#B4B2A9;padding:10px 0;">No books yet!</div></div>
+    </div>
+    <div class="card">
+      <div class="ctitle" style="color:var(--purple-d);"><i class="ti ti-grid-dots"></i> Browse by genre</div>
+      <div class="gengrid" id="genregrid"></div>
+    </div>
+  </div>
+
+  <div class="twocol">
+    <div class="card">
+      <div class="ctitle" style="color:var(--amber-d);"><i class="ti ti-medal"></i> Recent badges</div>
+      <div id="home-badges"><div style="font-size:12px;color:#B4B2A9;padding:6px 0;">Earn badges by reading!</div></div>
+    </div>
+    <div class="card">
+      <div class="ctitle" style="color:var(--green-d);"><i class="ti ti-activity"></i> Activity feed</div>
+      <div id="actfeed"><div style="font-size:12px;color:#B4B2A9;padding:6px 0;">Your activity shows here.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SHELF ====== -->
+<div class="pg" id="pg-shelf">
+  <div class="pghead">
+    <div><div class="pgtitle">My shelf</div><div class="pgsub" id="shelfcount">0 books</div></div>
+    <button class="btn bpk sm" onclick="goPage('log')"><i class="ti ti-plus"></i> Add book</button>
+  </div>
+  <div class="filtrow">
+    <div class="fpill on" onclick="setFilt('all',this)">All books</div>
+    <div class="fpill" onclick="setFilt('reading',this)">Reading now</div>
+    <div class="fpill" onclick="setFilt('done',this)">Finished!</div>
+    <div class="fpill" onclick="setFilt('want',this)">Want to read</div>
+  </div>
+  <div id="shelflist"></div>
+</div>
+
+<!-- ====== LOG ====== -->
+<div class="pg" id="pg-log">
+  <div class="pghead"><div><div class="pgtitle">Log a book</div><div class="pgsub">Add to your reading adventure</div></div></div>
+  <div class="formsec">
+    <div class="frow2">
+      <div><label class="fl">Book title</label><input class="fi" id="it" type="text" placeholder="e.g. Harry Potter..."/></div>
+      <div><label class="fl">Author</label><input class="fi" id="ia" type="text" placeholder="e.g. J.K. Rowling"/></div>
+    </div>
+    <div class="frow3">
+      <div><label class="fl">Genre</label>
+        <select class="fi" id="ig">
+          <option value="">Choose genre...</option>
+          <option>Fiction</option><option>Fantasy</option><option>Mystery</option>
+          <option>Science fiction</option><option>Adventure</option><option>Funny</option>
+          <option>Non-fiction</option><option>Animals</option><option>History</option>
+          <option>Poetry</option><option>Biography</option><option>Romance</option><option>Thriller</option>
+        </select>
+      </div>
+      <div><label class="fl">Status</label>
+        <select class="fi" id="is">
+          <option value="reading">Currently reading</option>
+          <option value="done">Finished it!</option>
+          <option value="want">Want to read</option>
+        </select>
+      </div>
+      <div><label class="fl">My rating</label>
+        <select class="fi" id="ir">
+          <option value="0">No rating yet</option>
+          <option value="1">1 star</option><option value="2">2 stars</option>
+          <option value="3">3 stars — Good!</option><option value="4">4 stars — Great!</option>
+          <option value="5">5 stars — AMAZING!</option>
+        </select>
+      </div>
+    </div>
+    <div class="frow2">
+      <div><label class="fl">Pages read</label><input class="fi" id="ip" type="number" placeholder="e.g. 320" min="0"/></div>
+      <div><label class="fl">Total pages in book</label><input class="fi" id="itp" type="number" placeholder="e.g. 480" min="0"/></div>
+    </div>
+    <label class="fl">My thoughts</label>
+    <textarea class="fi" id="in" rows="3" placeholder="What did you think? Would you recommend it?"></textarea>
+    <button class="btn bpk full" onclick="logBook()"><i class="ti ti-device-floppy"></i> Save to my shelf!</button>
+  </div>
+</div>
+
+<!-- ====== SEARCH ====== -->
+<div class="pg" id="pg-search">
+  <div class="pghead"><div><div class="pgtitle">Search books</div><div class="pgsub">Find your next great read</div></div></div>
+  <div class="searchbar">
+    <input class="searchinput" id="search-inp" type="text" placeholder="Type a book title or author..." onkeydown="if(event.key==='Enter')doSearch()"/>
+    <button class="btn bbl" onclick="doSearch()"><i class="ti ti-search"></i> Search</button>
+  </div>
+  <div id="search-results">
+    <div class="empty"><i class="ti ti-search"></i><p>Search for a book above!</p></div>
+  </div>
+</div>
+
+<!-- ====== RECS ====== -->
+<div class="pg" id="pg-recs">
+  <div class="pghead">
+    <div><div class="pgtitle">Books for you</div><div class="pgsub">AI recommendations based on what you love</div></div>
+    <button class="btn bg sm" id="recbtn" onclick="getRecs()"><i class="ti ti-refresh"></i> Refresh</button>
+  </div>
+  <div id="recsarea">
+    <div style="background:#fff;border:2px solid #9FE1CB;border-radius:20px;padding:32px;text-align:center;">
+      <svg width="100" height="90" viewBox="0 0 100 90" style="margin:0 auto 14px;display:block;">
+        <circle cx="50" cy="48" r="40" fill="#E1F5EE"/>
+        <rect x="18" y="30" width="24" height="34" rx="5" fill="#1D9E75"/>
+        <rect x="20" y="32" width="20" height="30" rx="4" fill="#5DCAA5"/>
+        <rect x="55" y="22" width="28" height="42" rx="5" fill="#7F77DD"/>
+        <rect x="57" y="24" width="24" height="38" rx="4" fill="#AFA9EC"/>
+        <circle cx="76" cy="18" r="14" fill="#FAC775"/>
+        <text x="76" y="23" text-anchor="middle" font-family="Fredoka One,cursive" font-size="13" fill="#854F0B">AI</text>
+      </svg>
+      <p style="font-size:15px;font-weight:700;color:var(--green-d);margin-bottom:16px;">Log at least one book and I'll find your next favourite!</p>
+      <button class="btn bg" style="max-width:300px;margin:0 auto;" onclick="getRecs()"><i class="ti ti-sparkles"></i> Get my recommendations!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== QUIZ ====== -->
+<div class="pg" id="pg-quiz">
+  <div class="pghead"><div><div class="pgtitle">Reader Personality Quiz</div><div class="pgsub">Discover your reading personality &amp; get book recommendations!</div></div></div>
+  <div class="qwrap" id="quizarea">
+    <div class="qcard" style="text-align:center;padding:32px;">
+      <svg width="110" height="110" viewBox="0 0 110 110" style="margin:0 auto 14px;display:block;">
+        <circle cx="55" cy="55" r="50" fill="#EEEDFE"/>
+        <!-- Wizard hat -->
+        <polygon points="55,10 38,52 72,52" fill="#7F77DD"/>
+        <rect x="33" y="50" width="44" height="8" rx="4" fill="#534AB7"/>
+        <circle cx="55" cy="10" r="4" fill="#FAC775"/>
+        <circle cx="42" cy="35" r="3" fill="#FAC775"/>
+        <circle cx="65" cy="28" r="2" fill="#ED93B1"/>
+        <!-- Face -->
+        <ellipse cx="55" cy="72" rx="18" ry="18" fill="#FAEEDA"/>
+        <ellipse cx="48" cy="68" rx="4" ry="5" fill="#fff"/>
+        <ellipse cx="62" cy="68" rx="4" ry="5" fill="#fff"/>
+        <ellipse cx="48" cy="69" rx="3" ry="3" fill="#26215C"/>
+        <ellipse cx="62" cy="69" rx="3" ry="3" fill="#26215C"/>
+        <ellipse cx="49" cy="68" rx="1" ry="1" fill="#fff"/>
+        <ellipse cx="63" cy="68" rx="1" ry="1" fill="#fff"/>
+        <path d="M49 79 Q55 84 61 79" fill="none" stroke="#BA7517" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div style="font-family:'Fredoka One',cursive;font-size:20px;color:var(--purple-d);margin-bottom:8px;">What kind of reader are you?</div>
+      <p style="font-size:14px;font-weight:700;color:#888780;margin-bottom:20px;line-height:1.6;">Answer 8 fun questions and discover your reading personality, your perfect genres, and 4 books made just for you!</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:20px;">
+        <span style="background:var(--pink-l);color:var(--pink-d);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:800;">🐉 The Dreamer</span>
+        <span style="background:var(--blue-l);color:var(--blue-d);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:800;">🔍 The Detective</span>
+        <span style="background:var(--amber-l);color:var(--amber-d);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:800;">🚀 The Explorer</span>
+        <span style="background:var(--green-l);color:var(--green-d);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:800;">😂 The Jokester</span>
+        <span style="background:var(--purple-l);color:var(--purple-d);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:800;">🧠 The Thinker</span>
+      </div>
+      <button class="btn ba" style="max-width:260px;margin:0 auto;" onclick="startPersonalityQuiz()"><i class="ti ti-wand"></i> Find my reading personality!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== TIMER ====== -->
+<div class="pg" id="pg-timer">
+  <div class="pghead"><div><div class="pgtitle">Reading timer</div><div class="pgsub">Track your reading sessions and earn XP!</div></div></div>
+  <div class="twocol">
+    <div class="card" style="text-align:center;padding:24px;">
+      <div class="ctitle" style="justify-content:center;color:var(--purple-d);"><i class="ti ti-clock"></i> Session timer</div>
+      <div class="timer-circle">
+        <div class="timer-num" id="timer-num">00:00</div>
+        <div class="timer-lbl" id="timer-lbl">Ready to read!</div>
+      </div>
+      <div class="timer-btns">
+        <button class="btn bg" id="timer-start-btn" onclick="toggleTimer()"><i class="ti ti-player-play"></i> Start</button>
+        <button class="btn bco" onclick="resetTimer()"><i class="ti ti-refresh"></i> Reset</button>
+      </div>
+      <div style="margin-top:14px;">
+        <label class="fl" style="text-align:left;">Reading this book:</label>
+        <select class="fi" id="timer-book" style="margin-bottom:0;">
+          <option value="">-- Select a book --</option>
+        </select>
+      </div>
+      <div style="margin-top:10px;font-size:12px;color:#888780;">Every minute = 1 XP earned!</div>
+    </div>
+    <div class="card">
+      <div class="ctitle" style="color:var(--green-d);"><i class="ti ti-history"></i> Reading sessions</div>
+      <div class="timer-sessions" id="timer-sessions">
+        <div style="font-size:12px;color:#B4B2A9;padding:8px 0;">No sessions yet — start reading!</div>
+      </div>
+      <div style="margin-top:12px;padding-top:12px;border-top:2px dashed #EEEDFE;">
+        <div style="font-family:'Fredoka One',cursive;font-size:14px;color:var(--green-d);">Total time read</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:28px;color:var(--green);"><span id="total-time-display">0</span> minutes</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== GOALS ====== -->
+<div class="pg" id="pg-goals">
+  <div class="pghead"><div><div class="pgtitle">My goals</div><div class="pgsub">Reading challenges to push you further!</div></div></div>
+  <div id="goalsarea"></div>
+</div>
+
+<!-- ====== BADGES ====== -->
+<div class="pg" id="pg-badges">
+  <div class="pghead"><div><div class="pgtitle">My badges</div><div class="pgsub">Collect them all by reading!</div></div></div>
+  <div class="badge-grid" id="badge-grid"></div>
+</div>
+
+<!-- ====== LEADERBOARD ====== -->
+<div class="pg" id="pg-leaderboard">
+  <div class="pghead"><div><div class="pgtitle">Leaderboard</div><div class="pgsub">See how you rank against other readers!</div></div></div>
+  <div id="lb-area"></div>
+</div>
+
+<!-- ====== PARENT DASH ====== -->
+<div class="pg" id="pg-parent">
+  <div class="pghead"><div><div class="pgtitle">Parent dashboard</div><div class="pgsub">Track your child's reading progress</div></div></div>
+  <div id="parent-area"></div>
+</div>
+
+</div><!-- end content -->
+</div><!-- end layout -->
+</div><!-- end app -->
+
+<script>
+// ===== STATE =====
+let books=[],xp=0,streak=0,acts=[],quizQs=[],curQ=0,score=0,answered=false,sfilt='all';
+let timerInterval=null,timerSecs=0,timerRunning=false,readSessions=[],totalMinutes=0;
+let earnedBadges=new Set();
+
+const spines=['#D4537E','#378ADD','#1D9E75','#7F77DD','#EF9F27','#D85A30','#534AB7','#0F6E56','#993556','#185FA5'];
+const gens=[
+  {l:'Fantasy',c:'#7F77DD',bg:'#EEEDFE'},{l:'Fiction',c:'#D4537E',bg:'#FBEAF0'},
+  {l:'Mystery',c:'#378ADD',bg:'#E6F1FB'},{l:'Adventure',c:'#D85A30',bg:'#FAECE7'},
+  {l:'Sci-fi',c:'#1D9E75',bg:'#E1F5EE'},{l:'Funny',c:'#EF9F27',bg:'#FAEEDA'}
+];
+const tips=['Keep reading — you\'re amazing!','Every book makes you smarter!','You\'re a reading superstar!','Log more books to level up!','Books take you everywhere!','Great readers make great thinkers!','You\'re doing fantastic!'];
+const ricons=['ti-dragon','ti-rocket','ti-wand','ti-ghost','ti-planet','ti-sword'];
+const rcols=['#7F77DD','#D4537E','#1D9E75','#378ADD','#EF9F27','#D85A30'];
+const levels=[
+  {min:0,name:'Bookworm Beginner',next:'Page Turner'},
+  {min:100,name:'Page Turner',next:'Story Explorer'},
+  {min:250,name:'Story Explorer',next:'Chapter Champion'},
+  {min:500,name:'Chapter Champion',next:'Book Hero'},
+  {min:1000,name:'Book Hero',next:'Reading Legend'},
+  {min:2000,name:'Reading Legend',next:'Grand Master'},
+  {min:5000,name:'Grand Master',next:'MAX LEVEL!'},
+];
+
+const BADGES=[
+  {id:'first_book',icon:'📚',name:'First Chapter',desc:'Log your very first book',check:()=>books.length>=1},
+  {id:'five_books',icon:'🌟',name:'Star Reader',desc:'Log 5 books',check:()=>books.length>=5},
+  {id:'ten_books',icon:'🏆',name:'Book Champion',desc:'Log 10 books',check:()=>books.length>=10},
+  {id:'first_finish',icon:'🎉',name:'Bookfinisher',desc:'Finish your first book',check:()=>books.filter(b=>b.status==='done').length>=1},
+  {id:'five_finish',icon:'🦁',name:'Power Reader',desc:'Finish 5 books',check:()=>books.filter(b=>b.status==='done').length>=5},
+  {id:'1000_pages',icon:'📖',name:'Page Monster',desc:'Read 1,000 pages',check:()=>books.reduce((s,b)=>s+b.pages,0)>=1000},
+  {id:'five_genres',icon:'🌈',name:'Genre Explorer',desc:'Try 5 different genres',check:()=>new Set(books.filter(b=>b.genre).map(b=>b.genre)).size>=5},
+  {id:'quiz_perfect',icon:'🧠',name:'Personality Pro',desc:'Complete the reader personality quiz',check:()=>earnedBadges.has('quiz_perfect')},
+  {id:'100_xp',icon:'⚡',name:'XP Spark',desc:'Earn 100 XP',check:()=>xp>=100},
+  {id:'500_xp',icon:'💎',name:'XP Diamond',desc:'Earn 500 XP',check:()=>xp>=500},
+  {id:'30_mins',icon:'⏰',name:'Time Keeper',desc:'Read for 30 minutes total',check:()=>totalMinutes>=30},
+  {id:'level5',icon:'🚀',name:'Level Up!',desc:'Reach Level 5',check:()=>getLevel()>=5},
+];
+
+const FAKE_LB=[
+  {name:'Alex K.',xp:1240,books:14,avatar:'#D4537E',init:'A'},
+  {name:'Jamie L.',xp:980,books:11,avatar:'#378ADD',init:'J'},
+  {name:'Sam P.',xp:750,books:9,avatar:'#1D9E75',init:'S'},
+  {name:'Riley M.',xp:620,books:8,avatar:'#EF9F27',init:'R'},
+  {name:'Morgan T.',xp:410,books:6,avatar:'#D85A30',init:'M'},
+];
+
+// ===== NAVIGATION =====
+function goPage(p){
+  document.querySelectorAll('.pg').forEach(e=>e.classList.remove('on'));
+  document.querySelectorAll('.nitem').forEach(e=>e.classList.remove('on'));
+  document.getElementById('pg-'+p).classList.add('on');
+  document.getElementById('ni-'+p).classList.add('on');
+  const fns={home:refreshHome,shelf:renderShelf,goals:renderGoals,badges:renderBadges,leaderboard:renderLB,parent:renderParent,timer:renderTimerBooks};
+  if(fns[p])fns[p]();
+}
+
+// ===== LEVEL =====
+function getLevel(){return levels.findIndex((l,i)=>xp<(levels[i+1]||{min:99999}).min)+1||levels.length;}
+function getLevelData(){
+  const idx=levels.findIndex((l,i)=>xp<(levels[i+1]||{min:99999}).min);
+  const i=idx===-1?levels.length-1:idx;
+  return{...levels[i],lvl:i+1,next_min:(levels[i+1]||{min:xp+1}).min};
+}
+function updateLevelUI(){
+  const d=getLevelData();
+  const pct=Math.min(100,Math.round(((xp-levels[d.lvl-1].min)/((d.next_min||d.min+1)-(levels[d.lvl-1].min)))*100));
+  if(document.getElementById('lv-circle'))document.getElementById('lv-circle').textContent=d.lvl;
+  if(document.getElementById('lv-title'))document.getElementById('lv-title').textContent=d.name;
+  if(document.getElementById('lv-sub'))document.getElementById('lv-sub').textContent=xp+' / '+d.next_min+' XP to next level';
+  if(document.getElementById('lv-bar'))document.getElementById('lv-bar').style.width=pct+'%';
+  if(document.getElementById('lv-next'))document.getElementById('lv-next').textContent='📖 '+d.next;
+  document.getElementById('lvl').textContent=d.lvl;
+}
+
+// ===== XP =====
+function addXP(amt,reason){
+  xp+=amt;
+  document.getElementById('xpc').textContent=xp;
+  acts.push({t:reason+' +'+amt+' XP',c:'#EF9F27'});
+  updateLevelUI();
+  checkBadges();
+}
+
+// ===== HOME =====
+function refreshHome(){
+  const done=books.filter(b=>b.status==='done').length;
+  const pages=books.reduce((s,b)=>s+b.pages,0);
+  const genres=new Set(books.filter(b=>b.genre).map(b=>b.genre)).size;
+  document.getElementById('h1').textContent=books.length;
+  document.getElementById('h2').textContent=done;
+  document.getElementById('h3').textContent=pages.toLocaleString();
+  document.getElementById('h4').textContent=genres;
+  document.getElementById('h5').textContent=totalMinutes;
+  const rb=document.getElementById('recbks');
+  rb.innerHTML=!books.length?'<div style="font-size:12px;color:#B4B2A9;padding:10px 0;">No books yet!</div>':books.slice(-4).reverse().map(b=>`<div class="brow"><div class="mspine" style="background:${b.color}"><i class="ti ti-book"></i></div><div style="flex:1;min-width:0;"><div class="bmt" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${b.title}</div><div class="bmm">${b.genre||'No genre'}</div><span class="bmb ${b.status==='reading'?'bbr':b.status==='done'?'bbd':'bbw'}">${b.status==='reading'?'Reading':b.status==='done'?'Done!':'Want'}</span></div></div>`).join('');
+  document.getElementById('genregrid').innerHTML=gens.map(g=>`<div class="gpill" style="background:${g.bg};color:${g.c};border-color:${g.c}44;" onclick="goShelfGenre('${g.l}')">${g.l}</div>`).join('');
+  const af=document.getElementById('actfeed');
+  af.innerHTML=!acts.length?'<div style="font-size:12px;color:#B4B2A9;padding:6px 0;">Activity shows here.</div>':acts.slice(-5).reverse().map(a=>`<div class="arow"><div class="adot" style="background:${a.c}"></div><div class="atxt">${a.t}</div></div>`).join('');
+  const eb=document.getElementById('home-badges');
+  const earned=BADGES.filter(b=>b.check());
+  eb.innerHTML=!earned.length?'<div style="font-size:12px;color:#B4B2A9;padding:6px 0;">Earn badges by reading!</div>':earned.slice(-4).map(b=>`<span title="${b.desc}" style="font-size:28px;cursor:pointer;">${b.icon}</span>`).join(' ');
+  document.getElementById('owltip').textContent=tips[Math.floor(Math.random()*tips.length)];
+  updateLevelUI();
+}
+
+function goShelfGenre(g){sfilt=g;goPage('shelf');document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('on'));}
+
+// ===== LOG BOOK =====
+function logBook(){
+  const title=document.getElementById('it').value.trim();
+  if(!title){alert('Please enter a book title!');return;}
+  const b={
+    title,author:document.getElementById('ia').value.trim(),
+    genre:document.getElementById('ig').value,status:document.getElementById('is').value,
+    pages:parseInt(document.getElementById('ip').value)||0,
+    totalPages:parseInt(document.getElementById('itp').value)||0,
+    rating:parseInt(document.getElementById('ir').value)||0,
+    notes:document.getElementById('in').value.trim(),
+    color:spines[books.length%spines.length],id:Date.now()
+  };
+  books.push(b);
+  streak=Math.min(streak+1,999);
+  document.getElementById('stk').textContent=streak;
+  addXP(20,'Logged "'+b.title+'"');
+  if(b.status==='done')addXP(30,'Finished "'+b.title+'"');
+  acts.push({t:'Logged "'+b.title+'"',c:'#D4537E'});
+  ['it','ia','ip','itp','in'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ig').value='';document.getElementById('is').value='reading';document.getElementById('ir').value='0';
+  checkBadges();
+  goPage('home');
+}
+
+// ===== SHELF =====
+function setFilt(f,el){
+  sfilt=f;
+  document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');renderShelf();
+}
+function removeBook(id){
+  const i=books.findIndex(b=>b.id===id);
+  if(i>-1){acts.push({t:'Removed "'+books[i].title+'"',c:'#888780'});books.splice(i,1);}
+  renderShelf();refreshHome();
+}
+function renderShelf(){
+  const fil=sfilt==='all'?books:books.filter(b=>b.status===sfilt||b.genre===sfilt);
+  document.getElementById('shelfcount').textContent=fil.length+' book'+(fil.length!==1?'s':'');
+  const el=document.getElementById('shelflist');
+  if(!fil.length){el.innerHTML='<div class="empty"><i class="ti ti-books"></i><p>Nothing here yet!</p></div>';return;}
+  el.innerHTML=fil.map(b=>`<div class="bcard">
+    <div class="bspine" style="background:${b.color}">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect x="4" y="2" width="24" height="28" rx="5" fill="rgba(255,255,255,0.25)"/><rect x="7" y="8" width="10" height="2" rx="1" fill="rgba(255,255,255,0.7)"/><rect x="7" y="13" width="16" height="2" rx="1" fill="rgba(255,255,255,0.7)"/><rect x="7" y="18" width="12" height="2" rx="1" fill="rgba(255,255,255,0.7)"/><rect x="7" y="23" width="14" height="2" rx="1" fill="rgba(255,255,255,0.7)"/></svg>
+    </div>
+    <div style="flex:1;min-width:0;">
+      <div class="bct">${b.title}</div>
+      <div class="bca">${b.author||'Unknown author'}${b.genre?' &middot; '+b.genre:''}</div>
+      ${b.rating?`<div class="bcs">${'★'.repeat(b.rating)}${'☆'.repeat(5-b.rating)}</div>`:''}
+      <span class="bcb ${b.status==='reading'?'bbr':b.status==='done'?'bbd':'bbw'}">${b.status==='reading'?'Reading now':b.status==='done'?'Finished!':'Want to read'}${b.pages?' &middot; '+b.pages+' pages':''}</span>
+      ${b.totalPages&&b.pages?`<div style="background:#F1EFE8;border-radius:6px;height:6px;margin-top:6px;width:100%;"><div style="background:var(--green);border-radius:6px;height:6px;width:${Math.min(100,Math.round((b.pages/b.totalPages)*100))}%;"></div></div><div style="font-size:10px;font-weight:700;color:var(--green-d);margin-top:2px;">${Math.min(100,Math.round((b.pages/b.totalPages)*100))}% complete</div>`:''}
+      ${b.notes?`<div class="bcn">"${b.notes.slice(0,100)}${b.notes.length>100?'...':''}"</div>`:''}
+    </div>
+    <button class="delbtn" onclick="removeBook(${b.id})"><i class="ti ti-trash"></i></button>
+  </div>`).join('');
+}
+
+// ===== SEARCH =====
+async function doSearch(){
+  const q=document.getElementById('search-inp').value.trim();
+  if(!q)return;
+  document.getElementById('search-results').innerHTML='<div class="ldbox"><div class="lddots"><div class="ld lda"></div><div class="ld ldb"></div><div class="ld ldc"></div></div><div class="ldtxt">Searching books...</div></div>';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:`Search for books matching: "${q}". Return 5 results as ONLY valid JSON array, no markdown: [{"title":"...","author":"...","genre":"...","year":"...","description":"one sentence description","pages":200}]`}]})});
+    const data=await res.json();
+    const results=JSON.parse(data.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim());
+    document.getElementById('search-results').innerHTML=results.map((r,i)=>`
+      <div class="searchresult">
+        <div style="display:flex;align-items:flex-start;gap:12px;">
+          <div style="width:44px;height:56px;background:${spines[i%spines.length]};border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-book" style="color:#fff;font-size:18px;"></i></div>
+          <div style="flex:1;">
+            <div class="srt">${r.title}</div>
+            <div class="sra">${r.author||''}${r.year?' &middot; '+r.year:''}${r.genre?' &middot; '+r.genre:''}</div>
+            <div style="font-size:12px;color:#5F5E5A;margin-top:4px;">${r.description||''}</div>
+          </div>
+          <button class="btn bg xs" onclick="quickLog('${r.title.replace(/'/g,"\\'")}','${(r.author||'').replace(/'/g,"\\'")}','${r.genre||''}',${r.pages||0})">+ Log it</button>
+        </div>
+      </div>
+    `).join('');
+  }catch(e){
+    document.getElementById('search-results').innerHTML='<div class="empty"><i class="ti ti-alert-circle"></i><p>Search failed. Try again!</p></div>';
+  }
+}
+function quickLog(t,a,g,p){
+  if(books.find(b=>b.title.toLowerCase()===t.toLowerCase())){alert('Already on your shelf!');return;}
+  books.push({title:t,author:a,genre:g,status:'want',pages:0,totalPages:p,rating:0,notes:'',color:spines[books.length%spines.length],id:Date.now()});
+  addXP(10,'Added "'+t+'" to want list');
+  acts.push({t:'Added "'+t+'" to want list',c:'#1D9E75'});
+  checkBadges();
+  alert('"'+t+'" added to your want list!');
+}
+
+// ===== RECS =====
+async function getRecs(){
+  if(!books.length){alert('Log at least one book first!');return;}
+  const btn=document.getElementById('recbtn');btn.disabled=true;
+  document.getElementById('recsarea').innerHTML='<div class="ldbox"><div class="lddots"><div class="ld lda"></div><div class="ld ldb"></div><div class="ld ldc"></div></div><div class="ldtxt">Finding books you\'ll love...</div></div>';
+  const bl=books.map(b=>`"${b.title}"${b.author?' by '+b.author:''}${b.genre?' ('+b.genre+')':''}${b.rating?' rated '+b.rating+'/5':''}`).join(', ');
+  const gs=[...new Set(books.filter(b=>b.genre).map(b=>b.genre))].join(', ');
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1200,messages:[{role:'user',content:`Young reader. Books: ${bl}. Genres: ${gs||'mixed'}. Recommend 4 books for kids. Return ONLY valid JSON array, no markdown: [{"title":"...","author":"...","genre":"...","why":"fun one sentence why I'd love this","match":"Perfect match/You'll love this/Great pick/Hidden gem"}]`}]})});
+    const data=await res.json();
+    const recs=JSON.parse(data.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim());
+    document.getElementById('recsarea').innerHTML=recs.map((r,i)=>`<div class="recard"><div class="retop"><div class="reico" style="background:${rcols[i%rcols.length]}20;"><i class="ti ${ricons[i%ricons.length]}" style="color:${rcols[i%rcols.length]};font-size:26px;"></i></div><div style="flex:1;"><span class="rebadge">${r.match||'Recommended'}</span><div class="ret">${r.title}</div><div class="rea">${r.author||''}${r.genre?' &middot; '+r.genre:''}</div><div class="rew">${r.why}</div></div></div><div class="rebtns"><button class="rebtn" onclick="quickLog('${r.title.replace(/'/g,"\\'")}','${(r.author||'').replace(/'/g,"\\'")}','${r.genre||''}',0)">+ Want list</button></div></div>`).join('');
+    btn.disabled=false;
+  }catch(e){
+    document.getElementById('recsarea').innerHTML='<div class="empty"><i class="ti ti-alert-circle"></i><p>Oops! Try again.</p></div>';
+    btn.disabled=false;
+  }
+}
+
+// ===== PERSONALITY QUIZ =====
+const PQ=[
+  {q:"It's Saturday afternoon — what sounds most fun?",opts:["Going on an adventure outside 🌲","Solving a tricky puzzle 🧩","Daydreaming and drawing 🎨","Making friends laugh 😂"],traits:['explorer','detective','dreamer','jokester']},
+  {q:"Your perfect story has...",opts:["Dragons, magic, and faraway worlds 🐉","A mystery that needs solving 🔍","A journey to a brand new place 🚀","Lots of funny moments and silly characters 😄"],traits:['dreamer','detective','explorer','jokester']},
+  {q:"When something goes wrong, you usually...",opts:["Think really carefully before acting 🧠","Jump in and figure it out as you go 💪","Ask loads of questions to understand why 🤔","Make a joke to lighten the mood 😂"],traits:['thinker','explorer','detective','jokester']},
+  {q:"Pick your dream pet:",opts:["A phoenix that flies through fire 🔥","A super-smart robot dog 🤖","A friendly dragon who tells stories 🐲","A talking parrot who loves jokes 🦜"],traits:['dreamer','thinker','dreamer','jokester']},
+  {q:"What kind of ending do you prefer?",opts:["Everyone lives happily ever after 🌈","The mystery gets solved perfectly 🎯","The hero discovers something amazing about themselves 🌟","Everyone ends up laughing together 😂"],traits:['dreamer','detective','thinker','jokester']},
+  {q:"Your ideal reading spot is...",opts:["A cozy treehouse in a magical forest 🌳","A secret library full of clues 📚","A spaceship window looking at the stars 🌌","Anywhere with your best friend next to you 👫"],traits:['dreamer','detective','explorer','jokester']},
+  {q:"A book hero should be...",opts:["Brave and full of wonder 🦸","Smart and always one step ahead 🕵️","Curious and never stops exploring 🔭","Funny and always cheering people up 🎭"],traits:['dreamer','detective','explorer','jokester']},
+  {q:"What would you love to find in a book?",opts:["A hidden magical world inside a wardrobe 🚪","A secret code that only you can crack 🔐","A map to an undiscovered island 🗺️","A character who makes you laugh so hard you cry 🤣"],traits:['dreamer','detective','explorer','jokester']},
+];
+
+const PERSONALITIES={
+  dreamer:{name:'The Dreamer',emoji:'🐉',color:'#7F77DD',bg:'#EEEDFE',desc:'You love stories that sweep you away to magical worlds full of wonder, dragons, and impossible adventures. You have a big imagination and a heart full of hope!',genres:['Fantasy','Magical Realism','Fairy Tales','Adventure'],books:['The Chronicles of Narnia by C.S. Lewis','Percy Jackson & the Olympians by Rick Riordan','The Hobbit by J.R.R. Tolkien','A Wrinkle in Time by Madeleine L\'Engle']},
+  detective:{name:'The Detective',emoji:'🔍',color:'#378ADD',bg:'#E6F1FB',desc:'You love figuring things out and can\'t rest until every mystery is solved. You notice details others miss and have a brilliant, logical mind that loves a good puzzle!',genres:['Mystery','Thriller','Crime Fiction','Historical Fiction'],books:['Sherlock Holmes by Arthur Conan Doyle','Hilo: The Boy Who Crashed to Earth by Judd Winick','Encyclopedia Brown by Donald J. Sobol','The London Eye Mystery by Siobhan Dowd']},
+  explorer:{name:'The Explorer',emoji:'🚀',color:'#1D9E75',bg:'#E1F5EE',desc:'You crave action, discovery, and the thrill of the unknown. You want stories that take you to new places — whether that\'s outer space, deep oceans, or uncharted jungles!',genres:['Science Fiction','Adventure','Non-fiction','Travel'],books:['The Martian by Andy Weir (Young Adult edition)','Island of the Blue Dolphins by Scott O\'Dell','Treasure Island by Robert Louis Stevenson','Hatchet by Gary Paulsen']},
+  jokester:{name:'The Jokester',emoji:'😂',color:'#EF9F27',bg:'#FAEEDA',desc:'Life\'s too short to be serious! You love books that make you snort-laugh in public and characters who are gloriously silly. You spread joy wherever you go!',genres:['Humor','Funny Fiction','Comic Books','Realistic Fiction'],books:['Diary of a Wimpy Kid by Jeff Kinney','Big Nate by Lincoln Peirce','Captain Underpants by Dav Pilkey','Tom Gates by Liz Pichon']},
+  thinker:{name:'The Thinker',emoji:'🧠',color:'#D4537E',bg:'#FBEAF0',desc:'You love books that make you ask big questions about life, the universe, and everything. You\'re wise beyond your years and love stories that leave you thinking for days!',genres:['Non-fiction','Biography','Science Fiction','Philosophical Fiction'],books:['Wonder by R.J. Palacio','Ender\'s Game by Orson Scott Card','The Giver by Lois Lowry','Matilda by Roald Dahl']},
+};
+
+let pqAnswers=[];let pqCurrent=0;
+
+function startPersonalityQuiz(){
+  pqAnswers=[];pqCurrent=0;
+  renderPQ();
+}
+
+function renderPQ(){
+  if(pqCurrent>=PQ.length){showPersonalityResult();return;}
+  const q=PQ[pqCurrent];
+  const pct=Math.round((pqCurrent/PQ.length)*100);
+  const emojis=['🌟','🎯','💫','🎨','🌈','🚀','🦋','✨'];
+  document.getElementById('quizarea').innerHTML=`
+    <div class="qhd">
+      <span class="qnum">Q${pqCurrent+1}</span>
+      <div class="qpbg"><div class="qpfill" style="width:${pct}%"></div></div>
+      <span class="qnum">of ${PQ.length}</span>
+    </div>
+    <div class="qcard">
+      <div style="text-align:center;margin-bottom:16px;">
+        <div style="font-size:44px;margin-bottom:6px;">${emojis[pqCurrent]}</div>
+        <div style="font-size:11px;font-weight:800;color:var(--purple);text-transform:uppercase;letter-spacing:1px;">Question ${pqCurrent+1} of ${PQ.length}</div>
+      </div>
+      <div class="qtext">${q.q}</div>
+      <div>
+        ${q.opts.map((o,i)=>`
+          <button class="qopt" onclick="pqAnswer(${i})" style="text-align:center;font-size:15px;padding:14px 18px;">
+            ${o}
+          </button>
+        `).join('')}
+      </div>
+    </div>`;
+}
+
+function pqAnswer(idx){
+  pqAnswers.push(PQ[pqCurrent].traits[idx]);
+  pqCurrent++;
+  renderPQ();
+}
+
+async function showPersonalityResult(){
+  document.getElementById('quizarea').innerHTML='<div class="ldbox"><div class="lddots"><div class="ld lda"></div><div class="ld ldb"></div><div class="ld ldc"></div></div><div class="ldtxt">Discovering your reading personality...</div></div>';
+
+  // tally scores
+  const tally={dreamer:0,detective:0,explorer:0,jokester:0,thinker:0};
+  pqAnswers.forEach(t=>{ if(tally[t]!==undefined)tally[t]++; });
+  const topType=Object.entries(tally).sort((a,b)=>b[1]-a[1])[0][0];
+  const p=PERSONALITIES[topType];
+
+  // get AI book recs based on personality
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:`A young reader just took a personality quiz and got the result: "${p.name}" — ${p.desc}. Their top genres are: ${p.genres.join(', ')}. Recommend 4 specific books perfect for this reading personality type and age group (kids/young adult). Return ONLY a valid JSON array, no markdown, no backticks: [{"title":"...","author":"...","why":"one fun sentence why this matches their personality","emoji":"one relevant emoji"}]`}]})});
+    const data=await res.json();
+    const aiBooks=JSON.parse(data.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim());
+    renderPersonalityResult(p,topType,tally,aiBooks);
+  }catch(e){
+    renderPersonalityResult(p,topType,tally,null);
+  }
+  addXP(30,'Completed personality quiz');
+  earnedBadges.add('quiz_perfect');
+  checkBadges();
+  acts.push({t:'Discovered reading personality: '+p.name,c:p.color});
+}
+
+function renderPersonalityResult(p,type,tally,aiBooks){
+  const cols=['#D4537E','#378ADD','#EF9F27','#7F77DD','#1D9E75'];
+  const total=pqAnswers.length;
+  const sortedTypes=Object.entries(tally).sort((a,b)=>b[1]-a[1]);
+  const bookList=aiBooks||p.books.map(b=>{const[title,...rest]=b.split(' by ');return{title,author:rest.join(' by '),why:'A perfect match for your personality!',emoji:'📖'};});
+
+  document.getElementById('quizarea').innerHTML=`
+    <div style="background:#fff;border:2px solid ${p.color}44;border-radius:22px;padding:24px;margin-bottom:14px;text-align:center;">
+      <div class="confetti-row">${cols.map(c=>`<div class="cf" style="background:${c};"></div>`).join('')}</div>
+      <div style="font-size:64px;margin:10px 0;">${p.emoji}</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:13px;color:${p.color};text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">You are...</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:30px;color:var(--text);margin-bottom:12px;">${p.name}</div>
+      <div style="background:${p.bg};border-radius:14px;padding:14px 16px;font-size:14px;color:#444441;line-height:1.6;margin-bottom:16px;">${p.desc}</div>
+
+      <div style="margin-bottom:16px;">
+        <div style="font-family:'Fredoka One',cursive;font-size:15px;color:var(--text);margin-bottom:10px;">Your personality breakdown</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          ${sortedTypes.map(([t,v])=>{const pp=PERSONALITIES[t];return`<div style="display:flex;align-items:center;gap:8px;">
+            <div style="font-size:16px;width:28px;">${pp.emoji}</div>
+            <div style="font-size:12px;font-weight:700;color:${pp.color};width:100px;text-align:left;">${pp.name}</div>
+            <div style="flex:1;background:#F1EFE8;border-radius:6px;height:10px;"><div style="background:${pp.color};border-radius:6px;height:10px;width:${Math.round((v/total)*100)}%;transition:width 0.5s;"></div></div>
+            <div style="font-size:11px;font-weight:700;color:${pp.color};width:30px;text-align:right;">${Math.round((v/total)*100)}%</div>
+          </div>`;}).join('')}
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <div style="font-family:'Fredoka One',cursive;font-size:15px;color:var(--text);margin-bottom:8px;">Your best genres</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;justify-content:center;">
+          ${p.genres.map(g=>`<span style="background:${p.bg};color:${p.color};border:2px solid ${p.color}44;border-radius:20px;padding:5px 14px;font-size:13px;font-weight:800;">${g}</span>`).join('')}
+        </div>
+      </div>
+
+      <div style="text-align:left;">
+        <div style="font-family:'Fredoka One',cursive;font-size:15px;color:var(--text);margin-bottom:10px;text-align:center;">📚 Books picked just for you</div>
+        ${bookList.map(b=>`
+          <div style="background:${p.bg};border:2px solid ${p.color}33;border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;">
+            <div style="font-size:24px;flex-shrink:0;">${b.emoji||'📖'}</div>
+            <div>
+              <div style="font-size:14px;font-weight:800;color:var(--text);">${b.title}</div>
+              <div style="font-size:12px;color:#888780;margin-top:1px;">${b.author||''}</div>
+              <div style="font-size:12px;color:#444441;margin-top:4px;line-height:1.4;">${b.why}</div>
+            </div>
+            <button onclick="quickLog('${b.title.replace(/'/g,"\\'")}','${(b.author||'').replace(/'/g,"\\'")}','${p.genres[0]}',0)" style="background:${p.color};color:#fff;border:none;border-radius:9px;padding:5px 10px;font-family:'Fredoka One',cursive;font-size:11px;cursor:pointer;flex-shrink:0;white-space:nowrap;">+ Want list</button>
+          </div>
+        `).join('')}
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;">
+        <button class="btn ba sm" onclick="startPersonalityQuiz()"><i class="ti ti-refresh"></i> Retake quiz!</button>
+        <button class="btn bp sm" onclick="goPage('recs')"><i class="ti ti-sparkles"></i> More recs</button>
+        <button class="btn bg sm" onclick="goPage('home')"><i class="ti ti-home"></i> Go home</button>
+      </div>
+    </div>`;
+}
+
+// ===== TIMER =====
+function renderTimerBooks(){
+  const sel=document.getElementById('timer-book');
+  if(!sel)return;
+  sel.innerHTML='<option value="">-- Select a book --</option>'+books.filter(b=>b.status==='reading').map(b=>`<option value="${b.id}">${b.title}</option>`).join('');
+}
+function toggleTimer(){
+  if(timerRunning){
+    clearInterval(timerInterval);timerRunning=false;
+    const mins=Math.floor(timerSecs/60);
+    const bookSel=document.getElementById('timer-book');
+    const bookName=bookSel&&bookSel.value?books.find(b=>b.id==bookSel.value)?.title||'Free reading':'Free reading';
+    if(mins>0){
+      totalMinutes+=mins;
+      document.getElementById('tot-time').textContent=totalMinutes;
+      document.getElementById('total-time-display').textContent=totalMinutes;
+      readSessions.unshift({date:new Date().toLocaleDateString(),mins,book:bookName});
+      addXP(mins,'Read '+mins+' minutes');
+      renderTimerSessions();
+      checkBadges();
+    }
+    document.getElementById('timer-start-btn').innerHTML='<i class="ti ti-player-play"></i> Start';
+    document.getElementById('timer-lbl').textContent='Session saved!';
+  }else{
+    timerRunning=true;
+    timerInterval=setInterval(()=>{
+      timerSecs++;
+      const m=Math.floor(timerSecs/60),s=timerSecs%60;
+      document.getElementById('timer-num').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+      document.getElementById('timer-lbl').textContent='Reading...';
+    },1000);
+    document.getElementById('timer-start-btn').innerHTML='<i class="ti ti-player-pause"></i> Pause & Save';
+  }
+}
+function resetTimer(){
+  clearInterval(timerInterval);timerRunning=false;timerSecs=0;
+  document.getElementById('timer-num').textContent='00:00';
+  document.getElementById('timer-lbl').textContent='Ready to read!';
+  document.getElementById('timer-start-btn').innerHTML='<i class="ti ti-player-play"></i> Start';
+}
+function renderTimerSessions(){
+  const el=document.getElementById('timer-sessions');
+  if(!el)return;
+  el.innerHTML=!readSessions.length?'<div style="font-size:12px;color:#B4B2A9;padding:8px 0;">No sessions yet!</div>':readSessions.slice(0,8).map(s=>`<div class="session-item"><div><div style="font-size:13px;font-weight:700;color:var(--text);">${s.book}</div><div style="font-size:11px;color:#888780;">${s.date}</div></div><div style="font-family:'Fredoka One',cursive;font-size:16px;color:var(--green-d);">${s.mins}m</div></div>`).join('');
+}
+
+// ===== GOALS =====
+function renderGoals(){
+  const done=books.filter(b=>b.status==='done').length;
+  const pages=books.reduce((s,b)=>s+b.pages,0);
+  const genres=new Set(books.filter(b=>b.genre).map(b=>b.genre)).size;
+  const gs=[
+    {t:'Log your first book',target:1,cur:books.length,c:'#D4537E',bg:'#FBEAF0',ic:'ti-books'},
+    {t:'Read 5 books',target:5,cur:books.length,c:'#378ADD',bg:'#E6F1FB',ic:'ti-bookmarks'},
+    {t:'Finish 3 books',target:3,cur:done,c:'#1D9E75',bg:'#E1F5EE',ic:'ti-trophy'},
+    {t:'Read 500 pages',target:500,cur:pages,c:'#EF9F27',bg:'#FAEEDA',ic:'ti-file-text'},
+    {t:'Read 1,000 pages',target:1000,cur:pages,c:'#7F77DD',bg:'#EEEDFE',ic:'ti-file'},
+    {t:'Try 5 genres',target:5,cur:genres,c:'#D85A30',bg:'#FAECE7',ic:'ti-grid-dots'},
+    {t:'Earn 100 XP',target:100,cur:xp,c:'#D4537E',bg:'#FBEAF0',ic:'ti-star'},
+    {t:'Earn 500 XP',target:500,cur:xp,c:'#534AB7',bg:'#EEEDFE',ic:'ti-diamond'},
+    {t:'Read 60 minutes',target:60,cur:totalMinutes,c:'#1D9E75',bg:'#E1F5EE',ic:'ti-clock'},
+    {t:'Reach Level 5',target:5,cur:getLevel(),c:'#EF9F27',bg:'#FAEEDA',ic:'ti-award'},
+  ];
+  document.getElementById('goalsarea').innerHTML=gs.map(g=>{
+    const pct=Math.min(100,Math.round((g.cur/g.target)*100));
+    return`<div class="goalcard"><div class="gico" style="background:${g.bg};"><i class="ti ${g.ic}" style="color:${g.c};font-size:22px;"></i></div><div style="flex:1;"><div class="gtitle">${g.t}</div><div class="gsub">${Math.min(g.cur,g.target).toLocaleString()} of ${g.target.toLocaleString()}</div><div class="gpbg"><div class="gpfill" style="background:${g.c};width:${pct}%;"></div></div></div><div class="gdone" style="background:${g.bg};color:${g.c};">${pct>=100?'Done!':pct+'%'}</div></div>`;
+  }).join('');
+}
+
+// ===== BADGES =====
+function checkBadges(){
+  BADGES.forEach(b=>{
+    if(!earnedBadges.has(b.id)&&b.check()){
+      earnedBadges.add(b.id);
+      showBadgeModal(b);
+      acts.push({t:'Earned badge: '+b.name+'!',c:'#EF9F27'});
+    }
+  });
+}
+function showBadgeModal(b){
+  document.getElementById('modal-icon').textContent=b.icon;
+  document.getElementById('modal-title').textContent='Badge earned: '+b.name+'!';
+  document.getElementById('modal-desc').textContent=b.desc;
+  document.getElementById('badge-modal').classList.add('open');
+}
+function closeModal(){document.getElementById('badge-modal').classList.remove('open');}
+function renderBadges(){
+  document.getElementById('badge-grid').innerHTML=BADGES.map(b=>{
+    const earned=b.check();
+    return`<div class="badge-card ${earned?'earned':'locked'}"><span class="badge-ico">${b.icon}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div><span class="badge-status ${earned?'bs-earned':'bs-locked'}">${earned?'Earned!':'Locked'}</span></div>`;
+  }).join('');
+}
+
+// ===== LEADERBOARD =====
+function renderLB(){
+  const myXP=xp;
+  const allPlayers=[...FAKE_LB,{name:'You',xp:myXP,books:books.length,avatar:'#7F77DD',init:'Y',isYou:true}];
+  allPlayers.sort((a,b)=>b.xp-a.xp);
+  const rankEmojis=['🥇','🥈','🥉'];
+  document.getElementById('lb-area').innerHTML=`
+    <div class="card" style="margin-bottom:16px;background:var(--amber-l);border-color:#FAC775;">
+      <div style="font-family:'Fredoka One',cursive;font-size:14px;color:var(--amber-d);margin-bottom:8px;">About the leaderboard</div>
+      <div style="font-size:12px;color:var(--amber-d);">Rankings are based on total XP earned. Keep reading, finishing books, and acing quizzes to climb the ranks!</div>
+    </div>
+    ${allPlayers.map((p,i)=>`<div class="lb-item ${p.isYou?'lb-you':''}">
+      <div class="lb-rank">${rankEmojis[i]||('#'+(i+1))}</div>
+      <div class="lb-avatar" style="background:${p.avatar};">${p.init}</div>
+      <div style="flex:1;">
+        <div class="lb-name">${p.name}${p.isYou?' (You)':''}</div>
+        <div class="lb-stats">${p.books} book${p.books!==1?'s':''} logged</div>
+      </div>
+      <div class="lb-xp">${p.xp.toLocaleString()} XP</div>
+    </div>`).join('')}`;
+}
+
+// ===== PARENT DASH =====
+function renderParent(){
+  const done=books.filter(b=>b.status==='done').length;
+  const pages=books.reduce((s,b)=>s+b.pages,0);
+  const genres=new Set(books.filter(b=>b.genre).map(b=>b.genre)).size;
+  const lv=getLevelData();
+  document.getElementById('parent-area').innerHTML=`
+    <div style="background:var(--purple-l);border:2px solid #CECBF6;border-radius:18px;padding:16px 18px;margin-bottom:16px;">
+      <div style="font-family:'Fredoka One',cursive;font-size:16px;color:var(--purple-d);margin-bottom:6px;"><i class="ti ti-info-circle"></i> Parent dashboard</div>
+      <div style="font-size:13px;color:var(--purple-d);">Here you can monitor your child's reading progress, see what they're reading, and check how much time they've spent reading.</div>
+    </div>
+    <div class="child-card">
+      <div class="child-header">
+        <div class="child-avatar" style="background:var(--purple);">S</div>
+        <div>
+          <div class="child-name">Your Reader</div>
+          <div style="font-size:12px;color:#888780;">Level ${lv.lvl} — ${lv.name}</div>
+        </div>
+        <div style="margin-left:auto;text-align:right;">
+          <div style="font-family:'Fredoka One',cursive;font-size:14px;color:var(--amber-d);">${xp} total XP</div>
+          <div style="font-size:11px;color:#888780;">${streak}-day streak</div>
+        </div>
+      </div>
+      <div class="child-stats">
+        <div class="cs"><div class="csn">${books.length}</div><div class="csl">Books logged</div></div>
+        <div class="cs"><div class="csn">${done}</div><div class="csl">Finished</div></div>
+        <div class="cs"><div class="csn">${pages.toLocaleString()}</div><div class="csl">Pages read</div></div>
+        <div class="cs"><div class="csn">${totalMinutes}</div><div class="csl">Mins read</div></div>
+      </div>
+    </div>
+    <div class="twocol">
+      <div class="card">
+        <div class="ctitle" style="color:var(--blue-d);"><i class="ti ti-book"></i> Currently reading</div>
+        ${books.filter(b=>b.status==='reading').length?books.filter(b=>b.status==='reading').map(b=>`<div class="brow"><div class="mspine" style="background:${b.color}"><i class="ti ti-book"></i></div><div><div class="bmt">${b.title}</div><div class="bmm">${b.author||'Unknown'}${b.genre?' · '+b.genre:''}</div>${b.pages?`<div style="font-size:10px;font-weight:700;color:var(--blue);">${b.pages} pages read</div>`:''}</div></div>`).join(''):'<div style="font-size:12px;color:#B4B2A9;padding:8px 0;">Not reading anything right now.</div>'}
+      </div>
+      <div class="card">
+        <div class="ctitle" style="color:var(--green-d);"><i class="ti ti-medal"></i> Badges earned</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">${BADGES.filter(b=>b.check()).map(b=>`<span title="${b.name}: ${b.desc}" style="font-size:28px;cursor:help;">${b.icon}</span>`).join('')||'<div style="font-size:12px;color:#B4B2A9;">No badges yet.</div>'}</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ctitle" style="color:var(--green-d);"><i class="ti ti-check"></i> Finished books</div>
+      ${books.filter(b=>b.status==='done').length?books.filter(b=>b.status==='done').map(b=>`<div class="brow"><div class="mspine" style="background:${b.color}"><i class="ti ti-book"></i></div><div><div class="bmt">${b.title}</div><div class="bmm">${b.author||'Unknown'}${b.genre?' · '+b.genre:''}${b.rating?' · '+('★'.repeat(b.rating)):''}</div></div></div>`).join(''):'<div style="font-size:12px;color:#B4B2A9;padding:8px 0;">No books finished yet.</div>'}
+    </div>`;
+}
+
+// ===== MISC =====
+function claimXP(){
+  addXP(50,'Daily challenge');
+  document.getElementById('dbar').style.width='100%';
+  alert('You earned 50 XP for your daily challenge!');
+  refreshHome();
+}
+
+// ===== INIT =====
+refreshHome();
+renderGoals();
+renderBadges();
+</script>
+</body>
+</html>
